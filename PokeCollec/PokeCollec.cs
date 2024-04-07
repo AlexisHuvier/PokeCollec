@@ -29,6 +29,9 @@ public class PokeCollec: Window
         FontManager.AddFont("30", "Resource/font.ttf", 30);
 
         AddScene(new MainScene());
+        AddScene(new CollectionScene());
+        AddScene(new StatistiquesScene());
+        AddScene(new RechercheScene());
 
         IndexCurrentScene = 0;
     }
