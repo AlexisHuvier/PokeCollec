@@ -1,0 +1,31 @@
+[
+  {
+    "serie": {
+      "name": "Ecarlate et Violet",
+      "id": "sv"
+    },
+    "set": {
+      "name": "Faille Paradoxe",
+      "id": "sv04"
+    },
+    "purchases": {
+      "tri-pack": 4,
+      "etb": 1
+    },
+    "cards": [ 1 ]
+  },
+  {
+    "serie": {
+      "name": "Ecarlate et Violet",
+      "id": "sv"
+    },
+    "set": {
+      "name": "Force Temporelle",
+      "id": "sv05"
+    },
+    "purchase": {
+      "tri-pack": 2
+    },
+    "cards": [ 1 ]
+  }
+]
