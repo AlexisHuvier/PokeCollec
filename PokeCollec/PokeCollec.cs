@@ -19,7 +19,7 @@ public class PokeCollec: Window
     public static PokeRepository PokeRepository { get; set; } = new PokeRepository();
     public static CacheRepository CacheRepository { get; set; } = new CacheRepository();
 
-    public PokeCollec(): base(1300, 900, "PokéCollec", Color.AliceBlue, null, true, true, true)
+    public PokeCollec(): base(1300, 900, "PokeCollec", Color.AliceBlue, null, true, true, true)
     {
         RenderImGui = DebugManager.SeRenderImGui;
         Datas = "data.json".LoadData();
