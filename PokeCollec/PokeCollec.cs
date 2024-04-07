@@ -21,7 +21,6 @@ public class PokeCollec: Window
 
     public PokeCollec(): base(1300, 900, "PokeCollec", Color.AliceBlue, null, true, true, true)
     {
-        RenderImGui = DebugManager.SeRenderImGui;
         Datas = "data.json".LoadData();
 
         FontManager.AddFont("70", "Resource/font.ttf", 70);
