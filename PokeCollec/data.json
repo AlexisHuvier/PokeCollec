@@ -9,6 +9,7 @@
       "id": "sv04"
     },
     "purchases": {
+      "booster": 2,
       "tri-pack": 4,
       "etb": 1
     },

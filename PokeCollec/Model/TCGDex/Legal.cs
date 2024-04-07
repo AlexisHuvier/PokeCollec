@@ -1,4 +1,4 @@
-﻿namespace PokeCollec.Models.TCGDex;
+﻿namespace PokeCollec.Model.TCGDex;
 
 public struct Legal
 {

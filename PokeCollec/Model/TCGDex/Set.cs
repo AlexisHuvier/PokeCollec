@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PokeCollec.Models.TCGDex;
+namespace PokeCollec.Model.TCGDex;
 
 public struct Set
 {

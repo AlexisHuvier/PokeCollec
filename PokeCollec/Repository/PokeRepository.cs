@@ -1,4 +1,4 @@
-﻿using PokeCollec.Models.TCGDex;
+﻿using PokeCollec.Model.TCGDex;
 using System;
 using System.Collections.Generic;
 using System.Linq;

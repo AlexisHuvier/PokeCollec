@@ -1,6 +1,9 @@
-﻿using PokeCollec.Commands;
-using PokeCollec.Models;
+﻿using PokeCollec.Model;
 using PokeCollec.Repository;
+using PokeCollec.Scene;
+using SharpEngine.Core;
+using SharpEngine.Core.Manager;
+using SharpEngine.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,41 +13,23 @@ using System.Threading.Tasks;
 
 namespace PokeCollec;
 
-public class PokeCollec
+public class PokeCollec: Window
 {
-    public List<Data> Datas { get; set; } = null!;
-    public PokeRepository Repository { get; set; } = new PokeRepository();
-    public List<IBaseCommand> Commands { get; set; } = [
-        new ListCommand(),
-        new HelpCommand(),
-        new InfoCommand()
-    ];
+    public static List<Data> Datas { get; set; } = null!;
+    public static PokeRepository PokeRepository { get; set; } = new PokeRepository();
+    public static CacheRepository CacheRepository { get; set; } = new CacheRepository();
 
-    public void ProcessCommand(string userInput)
+    public PokeCollec(): base(1300, 900, "PokéCollec", Color.AliceBlue, null, true, true, true)
     {
-        var parts = userInput.Split(' ');
-        if (parts.Length == 0)
-            return;
+        RenderImGui = DebugManager.SeRenderImGui;
+        Datas = "data.json".LoadData();
 
-        foreach (var command in Commands)
-        {
-            if (parts[0] == command.Name)
-            {
-                command.Process(this, parts);
-                return;
-            }
-        }
+        FontManager.AddFont("70", "Resource/font.ttf", 70);
+        FontManager.AddFont("50", "Resource/font.ttf", 50);
+        FontManager.AddFont("30", "Resource/font.ttf", 30);
 
-        Console.WriteLine("Commande inconnue");
-    }
+        AddScene(new MainScene());
 
-    public void LoadData()
-    {
-        Datas = JsonSerializer.Deserialize<List<Data>>(File.ReadAllText("data.json"))!;
-    }
-
-    public void SaveData()
-    {
-        File.WriteAllText("data.json", JsonSerializer.Serialize(Datas));
+        IndexCurrentScene = 0;
     }
 }
