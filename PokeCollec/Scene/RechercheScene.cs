@@ -42,30 +42,52 @@ internal class RechercheScene: SharpEngine.Core.Scene
         var type = Selector.Selected;
         var value = LineInput.Text;
 
-        switch(type)
+        switch (type)
         {
             case "sets":
-                Display(SetsViewer, [SeriesViewer]);
-                if(value == "")
-                    SetsViewer.SetValues(PokeCollec.PokeRepository.GetSets() ?? []);
-                else
-                    SetsViewer.SetValues(PokeCollec.PokeRepository.GetSerie(value)?.Sets ?? []);
+                List<SetResume>? setsValue = value switch
+                {
+                    "" => GetValue<List<SetResume>?>(PokeCollec.PokeRepository.GetSets),
+                    _ => GetValue<Serie?>(() => PokeCollec.PokeRepository.GetSerie(value))?.Sets
+                };
+
+                if (setsValue != null) {
+                    Display(SetsViewer, [SeriesViewer, SerieViewer]);
+                    SetsViewer.SetValues(setsValue);
+                }
                 break;
             case "set":
-                DebugManager.Log(LogLevel.LogDebug, $"Result : {PokeCollec.PokeRepository.GetSet(value)}");
+                DebugManager.Log(LogLevel.LogDebug, $"Result : {GetValue(() => PokeCollec.PokeRepository.GetSet(value))}");
                 break;
             case "carte":
-                DebugManager.Log(LogLevel.LogDebug, $"Result : {PokeCollec.PokeRepository.GetCard(value)}");
+                DebugManager.Log(LogLevel.LogDebug, $"Result : {GetValue(() => PokeCollec.PokeRepository.GetCard(value))}");
                 break;
             case "séries":
-                Display(SeriesViewer, [SetsViewer]);
-                SeriesViewer.SetValues(PokeCollec.PokeRepository.GetSeries() ?? []);
+                var seriesValue = GetValue<List<SerieResume>?>(PokeCollec.PokeRepository.GetSeries);
+
+                if(seriesValue != null)
+                {
+                    Display(SeriesViewer, [SetsViewer, SerieViewer]);
+                    SeriesViewer.SetValues(seriesValue);
+                }
                 break;
             case "série":
                 DebugManager.Log(LogLevel.LogDebug, $"Result : {PokeCollec.PokeRepository.GetSerie(value)}");
                 break;
         }
 
+    }
+
+    private T? GetValue<T>(Func<T> function)
+    {
+        try
+        {
+            return function();
+        }
+        catch (Exception)
+        {
+            return default;
+        }
     }
 
     private void Display(SharpEngine.Core.Widget.Widget display, List<SharpEngine.Core.Widget.Widget> notDisplay)

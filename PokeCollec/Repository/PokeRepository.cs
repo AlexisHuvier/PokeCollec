@@ -15,23 +15,12 @@ public class PokeRepository
     public static HttpClient Client { get; set; } = new HttpClient();
     public const string BaseUrl = "https://api.tcgdex.net/v2/fr";
 
-    public List<SerieResume>? GetSeries() => Call<List<SerieResume>>($"{BaseUrl}/series");
+    public List<SerieResume> GetSeries() => Call<List<SerieResume>>($"{BaseUrl}/series");
 
-    public List<SetResume>? GetSets() => Call<List<SetResume>>($"{BaseUrl}/sets");
-    public Serie? GetSerie(string id) => Call<Serie>($"{BaseUrl}/series/{id}");
-    public Set? GetSet(string id) => Call<Set>($"{BaseUrl}/sets/{id}");
-    public Card? GetCard(string id) => Call<Card>($"{BaseUrl}/cards/{id}");
+    public List<SetResume> GetSets() => Call<List<SetResume>>($"{BaseUrl}/sets");
+    public Serie GetSerie(string id) => Call<Serie>($"{BaseUrl}/series/{id}");
+    public Set GetSet(string id) => Call<Set>($"{BaseUrl}/sets/{id}");
+    public Card GetCard(string id) => Call<Card>($"{BaseUrl}/cards/{id}");
 
-    private T? Call<T>(string route)
-    {
-        try
-        {
-            return Client.GetAsync(route).Result.Content.ReadFromJsonAsync<T>().Result;
-        }
-        catch (Exception e)
-        {
-            DebugManager.Log(SharpEngine.Core.Utils.LogLevel.LogDebug, $"Erreur : {e}");
-            return default;
-        }
-    }
+    private T Call<T>(string route) => Client.GetAsync(route).Result.Content.ReadFromJsonAsync<T>().Result!;
 }
