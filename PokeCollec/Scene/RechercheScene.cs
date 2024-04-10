@@ -20,6 +20,7 @@ internal class RechercheScene: SharpEngine.Core.Scene
 
     private ListViewer<SetResumeViewer, SetResume> SetsViewer { get; } = new ListViewer<SetResumeViewer, SetResume>(new Vec2(650, 200), "Sets");
     private ListViewer<SerieResumeViewer, SerieResume> SeriesViewer { get; } = new ListViewer<SerieResumeViewer, SerieResume>(new Vec2(650, 200), "Series");
+    private SerieViewer SerieViewer { get; } = new SerieViewer(new Vec2(650, 530));
 
     public RechercheScene()
     {
@@ -30,11 +31,13 @@ internal class RechercheScene: SharpEngine.Core.Scene
             .Clicked += Valider;
         AddWidget(SetsViewer);
         AddWidget(SeriesViewer);
+        AddWidget(SerieViewer);
 
         Selector.LeftButton.BackgroundColor = Color.AliceBlue.Darker();
         Selector.RightButton.BackgroundColor = Color.AliceBlue.Darker();
         SetsViewer.Displayed = false;
         SeriesViewer.Displayed = false;
+        SerieViewer.Displayed = false;
     }
 
     private void Valider(object? sender, EventArgs e)
@@ -72,7 +75,13 @@ internal class RechercheScene: SharpEngine.Core.Scene
                 }
                 break;
             case "série":
-                DebugManager.Log(LogLevel.LogDebug, $"Result : {PokeCollec.PokeRepository.GetSerie(value)}");
+                var serieValue = GetValue<Serie?>(() => PokeCollec.PokeRepository.GetSerie(value));
+
+                if(serieValue != null)
+                {
+                    Display(SerieViewer, [SetsViewer, SeriesViewer]);
+                    SerieViewer.SetValue(serieValue.Value);
+                }
                 break;
         }
 
