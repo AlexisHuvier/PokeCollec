@@ -15,20 +15,25 @@ public class ListViewer<TWidget, TItem> : SharpEngine.Core.Widget.Widget where T
     private List<TWidget> Items { get; }
     private List<TItem> Values { get; set; } = [];
     private int CurrentPage { get; set; } = 0;
+    private int PageNumber { get; set; } = 3;
 
-    public ListViewer(Vec2 position, string title, int zLayer = 0) : base(position, zLayer)
+    public ListViewer(Vec2 position, string title, int pageNumber = 3, int zLayer = 0) : base(position, zLayer)
     {
         AddChild(new Label(new Vec2(0, 50), title, "30"));
-        AddChild(new Button(new Vec2(-250, 50), "<", "30", null, Color.Black, Color.AliceBlue.Darker()))
+        AddChild(new Button(new Vec2(-300, 50), "<", "30", null, Color.Black, Color.AliceBlue.Darker()))
             .Clicked += Back;
-        AddChild(new Button(new Vec2(250, 50), ">", "30", null, Color.Black, Color.AliceBlue.Darker()))
+        AddChild(new Button(new Vec2(300, 50), ">", "30", null, Color.Black, Color.AliceBlue.Darker()))
             .Clicked += Next;
-        Items = [
-            AddChild((TWidget)Activator.CreateInstance(typeof(TWidget), [ new Vec2(0, 175) ])!),
-            AddChild((TWidget)Activator.CreateInstance(typeof(TWidget), [ new Vec2(0, 375) ])!), 
-            AddChild((TWidget)Activator.CreateInstance(typeof(TWidget), [ new Vec2(0, 575) ])!),
-        ];
+
+        PageNumber = pageNumber;
+
+        Items = [];
+
+        for (int i = 0; i < PageNumber; i++)
+            Items.Add(AddChild((TWidget)Activator.CreateInstance(typeof(TWidget), [new Vec2(0, 175 + 200 * i)])!));
     }
+
+    public void SetTitle(string title) => ((Label)Children[0]).Text = title;
 
     public void SetValues(List<TItem> items)
     {
@@ -39,7 +44,7 @@ public class ListViewer<TWidget, TItem> : SharpEngine.Core.Widget.Widget where T
 
     private void Next(object? sender, EventArgs e)
     {
-        if(CurrentPage < Values.Count / 3)
+        if(CurrentPage < Values.Count / PageNumber)
             CurrentPage++;
         else
             CurrentPage = 0;
@@ -51,7 +56,7 @@ public class ListViewer<TWidget, TItem> : SharpEngine.Core.Widget.Widget where T
         if(CurrentPage > 0)
             CurrentPage--;
         else
-            CurrentPage = Values.Count / 3;
+            CurrentPage = Values.Count / PageNumber;
         UpdateDisplay();
     }
 
@@ -59,10 +64,10 @@ public class ListViewer<TWidget, TItem> : SharpEngine.Core.Widget.Widget where T
     { 
         for (int i = 0; i < Items.Count; i++)
         {
-            if (Values.Count > i + CurrentPage * 3)
+            if (Values.Count > i + CurrentPage * PageNumber)
             {
                 Items[i].Displayed = true;
-                Items[i].SetValue(Values[i + CurrentPage * 3]);
+                Items[i].SetValue(Values[i + CurrentPage * PageNumber]);
             }
             else
                 Items[i].Displayed = false;
