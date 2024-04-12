@@ -11,12 +11,16 @@ namespace PokeCollec.Widget.Viewer;
 
 public class SerieViewer : BaseViewer<Serie>
 {
-    public SerieViewer(Vec2 position) : base(position, new Vec2(1100, 600))
+    private ListViewer<SetResumeViewer, SetResume> SetsViewer { get; }
+
+
+    public SerieViewer(Vec2 position) : base(position, new Vec2(1100, 650))
     {
-        AddChild(new Label(new Vec2(0, 50), "Série", "30"));
+        SetsViewer = AddChild(new ListViewer<SetResumeViewer, SetResume>(new Vec2(0, -175), "Sets", 2, 1));
     }
 
     public override void SetValue(Serie value)
     {
+        SetsViewer.SetValues(value.Sets);
     }
 }
