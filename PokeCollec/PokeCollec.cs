@@ -17,10 +17,12 @@ public class PokeCollec: Window
 {
     public static List<Data> Datas { get; set; } = null!;
     public static PokeRepository PokeRepository { get; set; } = new PokeRepository();
-    public static CacheRepository CacheRepository { get; set; } = new CacheRepository();
+    public static CacheRepository CacheRepository { get; set; }
 
     public PokeCollec(): base(1300, 900, "PokeCollec", Color.AliceBlue, null, true, true, true)
     {
+        CacheRepository = new CacheRepository(this);
+
         Datas = "data.json".LoadData();
 
         FontManager.AddFont("70", "Resource/font.ttf", 70);
