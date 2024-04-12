@@ -40,6 +40,14 @@ internal class RechercheScene: SharpEngine.Core.Scene
         SerieViewer.Displayed = false;
     }
 
+    public void SetSearch(string type, string value)
+    {
+        Selector.SelectedIndex = Selector.Values.IndexOf(type);
+        Selector.LabelValue.Text = Selector.Selected;
+        LineInput.Text = value;
+        Valider(null, new EventArgs { });
+    }
+
     private void Valider(object? sender, EventArgs e)
     {
         var type = Selector.Selected;
