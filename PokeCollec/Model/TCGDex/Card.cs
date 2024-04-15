@@ -42,6 +42,17 @@ public struct Variants
     public bool Holo { get; set; }
     public bool FirstEd { get; set; }
     public bool WPromo { get; set; }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        if (Normal) sb.Append("Normal ");
+        if (Reverse) sb.Append("Reverse ");
+        if (Holo) sb.Append("Holo ");
+        if (FirstEd) sb.Append("FirstEd ");
+        if (WPromo) sb.Append("WPromo ");
+        return sb.ToString();
+    }
 }
 
 public struct Item

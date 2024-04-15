@@ -19,11 +19,6 @@ public class SetViewer : BaseViewer<Set>
     private SerieResumeViewer SerieResumeViewer { get; }
     private ListCardViewer ListCardViewer { get; }
 
-
-    /*
-    public List<CardResume> Cards { get; set; }
-    public SerieResume Serie { get; set; }*/
-
     public SetViewer(Vec2 position) : base(position, new Vec2(1100, 650))
     {
         Title = AddChild(new Label(new Vec2(0, -300), "Title", "30"));

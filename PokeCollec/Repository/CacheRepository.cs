@@ -36,7 +36,19 @@ public class CacheRepository
             fileStream.Close();
             Window.TextureManager.AddTexture(name, $"cache/{name}");
         }
+        else if(!Window.TextureManager.HasTexture(name))
+            Window.TextureManager.AddTexture(name, $"cache/{name}");
         return name;
 
+    }
+
+    public void Clear()
+    {
+        foreach (var file in Directory.GetFiles("cache"))
+        {
+            if (Window.TextureManager.HasTexture(Path.GetFileName(file)))
+                Window.TextureManager.RemoveTexture(Path.GetFileName(file));
+            File.Delete(file);
+        }
     }
 }

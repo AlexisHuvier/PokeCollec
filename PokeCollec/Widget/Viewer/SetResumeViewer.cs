@@ -23,6 +23,7 @@ public class SetResumeViewer : BaseViewer<SetResume>
         AddChild(new Button(new Vec2(0, 50), "Détails", "30", null, Color.Black, Color.AliceBlue.Darker()))
             .Clicked += DetailsClicked;
     }
+
     private void DetailsClicked(object? sender, EventArgs e)
     {
         GetSceneAs<RechercheScene>()?.SetSearch("set", SetId.Text.Split(" : ")[^1]);
