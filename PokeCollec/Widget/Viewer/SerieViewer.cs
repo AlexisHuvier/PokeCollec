@@ -1,4 +1,5 @@
 ﻿using PokeCollec.Model.TCGDex;
+using PokeCollec.Scene;
 using SharpEngine.Core.Manager;
 using SharpEngine.Core.Math;
 using SharpEngine.Core.Widget;
@@ -20,7 +21,7 @@ public class SerieViewer : BaseViewer<Serie>
     public SerieViewer(Vec2 position) : base(position, new Vec2(1100, 650))
     {
         Title = AddChild(new Label(new Vec2(0, -300), "Title", "30"));
-        Logo = AddChild(new Image(new Vec2(0, -225)));
+        Logo = AddChild(new Image(new Vec2(0, -225), zLayer: -5));
         SetsViewer = AddChild(new ListViewer<SetResumeViewer, SetResume>(new Vec2(0, -175), "Sets", 2, 1));
     }
 

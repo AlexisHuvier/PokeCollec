@@ -21,6 +21,9 @@ internal class RechercheScene: SharpEngine.Core.Scene
     private ListViewer<SetResumeViewer, SetResume> SetsViewer { get; } = new ListViewer<SetResumeViewer, SetResume>(new Vec2(650, 200), "Sets");
     private ListViewer<SerieResumeViewer, SerieResume> SeriesViewer { get; } = new ListViewer<SerieResumeViewer, SerieResume>(new Vec2(650, 200), "Series");
     private SerieViewer SerieViewer { get; } = new SerieViewer(new Vec2(650, 530));
+    private SetViewer SetViewer { get; } = new SetViewer(new Vec2(650, 530));
+
+    private int searchTimer = 0;
 
     public RechercheScene()
     {
@@ -32,16 +35,29 @@ internal class RechercheScene: SharpEngine.Core.Scene
         AddWidget(SetsViewer);
         AddWidget(SeriesViewer);
         AddWidget(SerieViewer);
+        AddWidget(SetViewer);
 
         Selector.LeftButton.BackgroundColor = Color.AliceBlue.Darker();
         Selector.RightButton.BackgroundColor = Color.AliceBlue.Darker();
         SetsViewer.Displayed = false;
         SeriesViewer.Displayed = false;
         SerieViewer.Displayed = false;
+        SetViewer.Displayed = false;
+    }
+
+    public override void Update(float delta)
+    {
+        base.Update(delta);
+        if(searchTimer > 0)
+            searchTimer -= 1;
     }
 
     public void SetSearch(string type, string value)
     {
+        if (searchTimer > 0)
+            return;
+
+        searchTimer = 5;
         Selector.SelectedIndex = Selector.Values.IndexOf(type);
         Selector.LabelValue.Text = Selector.Selected;
         LineInput.Text = value;
@@ -63,12 +79,18 @@ internal class RechercheScene: SharpEngine.Core.Scene
                 };
 
                 if (setsValue != null) {
-                    Display(SetsViewer, [SeriesViewer, SerieViewer]);
+                    Display(SetsViewer, [SeriesViewer, SerieViewer, SetViewer]);
                     SetsViewer.SetValues(setsValue);
                 }
                 break;
             case "set":
-                DebugManager.Log(LogLevel.LogDebug, $"Result : {GetValue(() => PokeCollec.PokeRepository.GetSet(value))}");
+                var setValue = GetValue<Set?>(() => PokeCollec.PokeRepository.GetSet(value));
+
+                if(setValue != null)
+                {
+                    Display(SetViewer, [SetsViewer, SeriesViewer, SerieViewer]);
+                    SetViewer.SetValue(setValue.Value);
+                }
                 break;
             case "carte":
                 DebugManager.Log(LogLevel.LogDebug, $"Result : {GetValue(() => PokeCollec.PokeRepository.GetCard(value))}");
@@ -78,7 +100,7 @@ internal class RechercheScene: SharpEngine.Core.Scene
 
                 if(seriesValue != null)
                 {
-                    Display(SeriesViewer, [SetsViewer, SerieViewer]);
+                    Display(SeriesViewer, [SetsViewer, SerieViewer, SetViewer]);
                     SeriesViewer.SetValues(seriesValue);
                 }
                 break;
@@ -87,7 +109,7 @@ internal class RechercheScene: SharpEngine.Core.Scene
 
                 if(serieValue != null)
                 {
-                    Display(SerieViewer, [SetsViewer, SeriesViewer]);
+                    Display(SerieViewer, [SetsViewer, SeriesViewer, SetViewer]);
                     SerieViewer.SetValue(serieValue.Value);
                 }
                 break;
