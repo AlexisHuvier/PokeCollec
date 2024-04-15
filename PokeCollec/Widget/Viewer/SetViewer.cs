@@ -17,6 +17,7 @@ public class SetViewer : BaseViewer<Set>
     private Label CardCount { get; }
     private Label Info { get; }
     private SerieResumeViewer SerieResumeViewer { get; }
+    private ListCardViewer ListCardViewer { get; }
 
 
     /*
@@ -31,6 +32,7 @@ public class SetViewer : BaseViewer<Set>
         CardCount = AddChild(new Label(new Vec2(-400, -250), "Nombre de Cartes :", "30", centerAllLines: true));
         Info = AddChild(new Label(new Vec2(400, -250), "Informations :", "30", centerAllLines: true));
         SerieResumeViewer = AddChild(new SerieResumeViewer(new Vec2(0, -50)));
+        ListCardViewer = AddChild(new ListCardViewer(new Vec2(0, 175), new Vec2(1000, 225), 1, 3));
     }
 
     public override void SetValue(Set value)
@@ -44,5 +46,6 @@ public class SetViewer : BaseViewer<Set>
         CardCount.Text = $"Nombre de Cartes :\n- Officiel : {value.CardCount.Official}\n- Total : {value.CardCount.Total}";
         Info.Text = $"Informations :\nDate : {value.ReleaseDate}\n{(value.Legal.Standard ? "Valide" : "Invalide")} - {(value.Legal.Expanded ? "Valide" : "Invalide")}\nTCG : {(value.TcgOnline != null && value.TcgOnline.Length > 0 ? value.TcgOnline : "/")}";
         SerieResumeViewer.SetValue(value.Serie);
+        ListCardViewer.SetValue(value.Cards ?? []);
     }
 }
