@@ -23,8 +23,6 @@ internal class RechercheScene: SharpEngine.Core.Scene
     private SerieViewer SerieViewer { get; } = new SerieViewer(new Vec2(650, 530));
     private SetViewer SetViewer { get; } = new SetViewer(new Vec2(650, 530));
 
-    private int searchTimer = 0;
-
     public RechercheScene()
     {
         AddWidget(new Widget.Menu());
@@ -45,19 +43,8 @@ internal class RechercheScene: SharpEngine.Core.Scene
         SetViewer.Displayed = false;
     }
 
-    public override void Update(float delta)
-    {
-        base.Update(delta);
-        if(searchTimer > 0)
-            searchTimer -= 1;
-    }
-
     public void SetSearch(string type, string value)
     {
-        if (searchTimer > 0)
-            return;
-
-        searchTimer = 5;
         Selector.SelectedIndex = Selector.Values.IndexOf(type);
         Selector.LabelValue.Text = Selector.Selected;
         LineInput.Text = value;
