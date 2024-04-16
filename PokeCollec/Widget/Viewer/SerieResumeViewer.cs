@@ -1,5 +1,6 @@
 ﻿using PokeCollec.Model.TCGDex;
 using PokeCollec.Scene;
+using SharpEngine.Core.Manager;
 using SharpEngine.Core.Math;
 using SharpEngine.Core.Utils;
 using SharpEngine.Core.Widget;

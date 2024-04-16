@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using Image = SharpEngine.Core.Widget.Image;
 using Color = SharpEngine.Core.Utils.Color;
+using System.Data.Common;
 
 namespace PokeCollec.Widget.Viewer;
 
@@ -22,9 +23,6 @@ public class CardViewer : BaseViewer<Card>
 
     private Label Informations { get; }
     private Label Description { get; }
-
-    private string SetId { get; set; } = "";
-
 
     public CardViewer(Vec2 position) : base(position, new Vec2(1100, 650))
     {
@@ -37,17 +35,42 @@ public class CardViewer : BaseViewer<Card>
         AddChild(new Button(new Vec2(-200, 260), "Ajouter à la collection", "30", new Vec2(300, 60), Color.Black, Color.AliceBlue.Darker()));
         AddChild(new Button(new Vec2(200, 260), "Détails du Set", "30", new Vec2(300, 60), Color.Black, Color.AliceBlue.Darker()))
             .Clicked += SetClicked;
+
+        AddChild(new Button(new Vec2(-500, 0), "<", "30", new Vec2(75, 40), Color.Black, Color.AliceBlue.Darker()))
+            .Clicked += Back;
+        AddChild(new Button(new Vec2(500, 0), ">", "30", new Vec2(75, 40), Color.Black, Color.AliceBlue.Darker()))
+            .Clicked += Next;
     }
 
     private void SetClicked(object? sender, EventArgs e)
     {
-        GetSceneAs<RechercheScene>()?.SetSearch("set", SetId);
+        GetSceneAs<RechercheScene>()?.SetSearch("set", string.Join("-", Title.Text.Split(" (")[^1][..^1].Split("-")[..^1]));
+    }
+
+    private void Next(object? sender, EventArgs e)
+    { 
+        var id = Title.Text.Split(" (")[^1][..^1];
+        if (int.TryParse(id.Split("-")[^1], out var nbId))
+        {
+            var nextId = string.Join("-", id.Split("-")[..^1]) + "-" + (nbId + 1).ToString().PadLeft(id.Split("-")[^1].Length, '0');
+            GetSceneAs<RechercheScene>()?.SetSearch("carte", nextId);
+        }
+    }
+
+    private void Back(object? sender, EventArgs e)
+    {
+        var id = Title.Text.Split(" (")[^1][..^1];
+        if (int.TryParse(id.Split("-")[^1], out var nbId))
+        {
+            var precId = string.Join("-", id.Split("-")[..^1]) + "-" + (nbId - 1).ToString().PadLeft(id.Split("-")[^1].Length, '0');
+            GetSceneAs<RechercheScene>()?.SetSearch("carte", precId);
+        }
     }
 
     public override void SetValue(Card value)
     {
-        SetId = value.Set.Id;
-
+        if(value.Id == null)
+            return;
 
         Title.Text = $"{value.Name} ({value.Id})";
         if (value.Image != null)
@@ -55,7 +78,7 @@ public class CardViewer : BaseViewer<Card>
         else
             Logo.Texture = "";
 
-        Informations.Text = $"ID Local : {value.LocalId}\nCatégorie : {value.Category}\nIllustrateur : {value.Illustrator}\nRareté : {value.Rarity}\nVariantes : {value.Variants}\nSet : {value.Set.Name} ({value.Set.Id})\nDexId : {string.Join(", ", value.DexId ?? [])}\nHP : {value.HP}\nTypes : {string.Join(", ", value.Types)}\nEvolution : {value.EvolveFrom}\nLevel : {value.Level}\nStage : {value.Stage}\nSuffix : {value.Suffix}";
+        Informations.Text = $"ID Local : {value.LocalId}\nCatégorie : {value.Category}\nIllustrateur : {value.Illustrator}\nRareté : {value.Rarity}\nVariantes : {value.Variants}\nSet : {value.Set.Name} ({value.Set.Id})\nDexId : {string.Join(", ", value.DexId ?? [])}\nHP : {value.HP}\nTypes : {string.Join(", ", value.Types ?? [])}\nEvolution : {value.EvolveFrom}\nLevel : {value.Level}\nStage : {value.Stage}\nSuffix : {value.Suffix}";
         var size = Raylib.MeasureTextEx(Scene!.Window!.FontManager.GetFont("30"), Informations.Text, 30f, 2f);
         Informations.Position = new Vec2(-450 + size.X / 2, -50 -size.Y / 2);
 
