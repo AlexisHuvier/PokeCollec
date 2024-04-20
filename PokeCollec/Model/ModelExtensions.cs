@@ -9,7 +9,9 @@ namespace PokeCollec.Model;
 
 public static class ModelExtensions
 {
-    public static List<Data> LoadData(this string file) => JsonSerializer.Deserialize<List<Data>>(File.ReadAllText(file))!;
+    public static JsonSerializerOptions JsonSerializerOptions { get; } = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
 
-    public static void SaveData(this List<Data> datas, string file) => File.WriteAllText(file, JsonSerializer.Serialize(datas));
+    public static List<Data> LoadData(this string file) => JsonSerializer.Deserialize<List<Data>>(File.ReadAllText(file), JsonSerializerOptions)!;
+
+    public static void SaveData(this List<Data> datas, string file) => File.WriteAllText(file, JsonSerializer.Serialize(datas, JsonSerializerOptions));
 }

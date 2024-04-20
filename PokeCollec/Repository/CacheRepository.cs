@@ -13,17 +13,34 @@ namespace PokeCollec.Repository;
 public class CacheRepository
 {
     public static HttpClient Client { get; set; } = new HttpClient();
+    public int CurrentLoaded { get; set; } = 0;
+    public int TotalToLoad { get; set; } = 0;
+
+    private List<string> FilesToLoad { get; } = new List<string>();
+
     private Window Window { get; }
 
     public CacheRepository(Window window)
     {
         if (!Directory.Exists("cache"))
             Directory.CreateDirectory("cache");
-        else
-            foreach (var file in Directory.GetFiles("cache"))
-                window.TextureManager.AddTexture(Path.GetFileName(file), file);
+
+        TotalToLoad = Directory.GetFiles("cache").Length;
+        FilesToLoad.AddRange(Directory.GetFiles("cache"));
 
         Window = window;
+    }
+
+    public void Update()
+    {
+        if(FilesToLoad.Count > 0)
+        {
+            var file = FilesToLoad[0];
+            FilesToLoad.RemoveAt(0);
+            if (!Window.TextureManager.HasTexture(Path.GetFileName(file)))
+                Window.TextureManager.AddTexture(Path.GetFileName(file), file);
+            CurrentLoaded++;
+        }
     }
 
     public string Get(string name, string url)

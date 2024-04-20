@@ -24,5 +24,14 @@ internal class Menu : SharpEngine.Core.Widget.Widget
             .Clicked += (s, e) => ChangeScene(3);
     }
 
+    public void Enabled(bool enabled)
+    {
+        foreach (var child in Children)
+        {
+            if (child is Button button)
+                button.Active = enabled;
+        }
+    }
+
     private void ChangeScene(int idScene) => Scene!.Window!.IndexCurrentScene = idScene;
 }

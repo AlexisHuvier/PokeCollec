@@ -24,6 +24,7 @@ public class PokeCollec: Window
         CacheRepository = new CacheRepository(this);
 
         Datas = "data.json".LoadData();
+        Datas = Datas.OrderBy(d => d.Serie.Name).ThenBy(d => d.Set.Name).ToList();
 
         FontManager.AddFont("70", "Resource/font.ttf", 70);
         FontManager.AddFont("50", "Resource/font.ttf", 50);

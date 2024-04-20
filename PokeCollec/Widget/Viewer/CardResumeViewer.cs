@@ -21,14 +21,24 @@ public class CardResumeViewer : BaseViewer<CardResume>
     {
         Title = AddChild(new Label(new Vec2(0, -80), "Title", "20"));
         Logo = AddChild(new Image(new Vec2(0, 0), scale: new Vec2(0.5f), zLayer: -5));
-        AddChild(new Button(new Vec2(-65, 80), "+", "20", new Vec2(30, 30), Color.Black, Color.AliceBlue.Darker()));
+        AddChild(new Button(new Vec2(-65, 80), "C", "20", new Vec2(30, 30), Color.Black, Color.AliceBlue.Darker()))
+            .Clicked += AddClicked;
         AddChild(new Button(new Vec2(65, 80), "D", "20", new Vec2(30, 30), Color.Black, Color.AliceBlue.Darker()))
             .Clicked += DetailsClicked;
     }
 
+    private void AddClicked(object? sender, EventArgs e)
+    {
+        if(PokeCollec.Datas.Any(x => x.Cards.Contains(Title.Text.Split(" (")[^1][..^1])))
+            Scene!.Window!.GetScene<CollectionScene>(1).RemoveCard(Title.Text.Split(" (")[^1][..^1]);
+        else
+            Scene!.Window!.GetScene<CollectionScene>(1).AddCard(Title.Text.Split(" (")[^1][..^1]);
+    }
+
     private void DetailsClicked(object? sender, EventArgs e)
     {
-        GetSceneAs<RechercheScene>()?.SetSearch("carte", Title.Text.Split(" (")[^1][..^1]);
+        Scene!.Window!.GetScene<RechercheScene>(3).SetSearch("carte", Title.Text.Split(" (")[^1][..^1]);
+        Scene!.Window!.IndexCurrentScene = 3;
     }
 
     public override void SetValue(CardResume value)

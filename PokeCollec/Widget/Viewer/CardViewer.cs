@@ -32,7 +32,8 @@ public class CardViewer : BaseViewer<Card>
         Informations = AddChild(new Label(new Vec2(-400, 0), "Informations", "30", centerAllLines: true));
         AddChild(new Label(new Vec2(0, 175), "Description :", "30", centerAllLines: true));
         Description = AddChild(new Label(new Vec2(0, 200), "Description", "20", centerAllLines: true));
-        AddChild(new Button(new Vec2(-200, 260), "Ajouter à la collection", "30", new Vec2(300, 60), Color.Black, Color.AliceBlue.Darker()));
+        AddChild(new Button(new Vec2(-200, 260), "Ajouter / Supprimer", "30", new Vec2(300, 60), Color.Black, Color.AliceBlue.Darker()))
+            .Clicked += AddClicked;
         AddChild(new Button(new Vec2(200, 260), "Détails du Set", "30", new Vec2(300, 60), Color.Black, Color.AliceBlue.Darker()))
             .Clicked += SetClicked;
 
@@ -42,9 +43,17 @@ public class CardViewer : BaseViewer<Card>
             .Clicked += Next;
     }
 
+    private void AddClicked(object? sender, EventArgs e)
+    {
+        if (PokeCollec.Datas.Any(x => x.Cards.Contains(Title.Text.Split(" (")[^1][..^1])))
+            Scene!.Window!.GetScene<CollectionScene>(1).RemoveCard(Title.Text.Split(" (")[^1][..^1]);
+        else
+            Scene!.Window!.GetScene<CollectionScene>(1).AddCard(Title.Text.Split(" (")[^1][..^1]);
+    }
+
     private void SetClicked(object? sender, EventArgs e)
     {
-        GetSceneAs<RechercheScene>()?.SetSearch("set", string.Join("-", Title.Text.Split(" (")[^1][..^1].Split("-")[..^1]));
+        Scene!.Window!.GetScene<RechercheScene>(3).SetSearch("set", string.Join("-", Title.Text.Split(" (")[^1][..^1].Split("-")[..^1]));
     }
 
     private void Next(object? sender, EventArgs e)
@@ -53,7 +62,7 @@ public class CardViewer : BaseViewer<Card>
         if (int.TryParse(id.Split("-")[^1], out var nbId))
         {
             var nextId = string.Join("-", id.Split("-")[..^1]) + "-" + (nbId + 1).ToString().PadLeft(id.Split("-")[^1].Length, '0');
-            GetSceneAs<RechercheScene>()?.SetSearch("carte", nextId);
+            Scene!.Window!.GetScene<RechercheScene>(3).SetSearch("carte", nextId);
         }
     }
 
@@ -63,7 +72,7 @@ public class CardViewer : BaseViewer<Card>
         if (int.TryParse(id.Split("-")[^1], out var nbId))
         {
             var precId = string.Join("-", id.Split("-")[..^1]) + "-" + (nbId - 1).ToString().PadLeft(id.Split("-")[^1].Length, '0');
-            GetSceneAs<RechercheScene>()?.SetSearch("carte", precId);
+            Scene!.Window!.GetScene<RechercheScene>(3).SetSearch("carte", precId);
         }
     }
 

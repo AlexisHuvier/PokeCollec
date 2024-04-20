@@ -33,7 +33,7 @@ namespace PokeCollec.Widget.Viewer
 
             for (int y = 0; y < NbLine; y++)
                 for (int x = 0; x < NbColumn; x++)
-                    Items.Add(AddChild(new CardResumeViewer(new Vec2(250 * (x - NbColumn / 2), 50 * (y - NbLine / 2)))));
+                    Items.Add(AddChild(new CardResumeViewer(new Vec2(250 * (x - NbColumn / 2), 225 * (y - NbLine / 2)))));
         }
 
         public void SetTitle(string title) => ((Label)Children[0]).Text = title;

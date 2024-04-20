@@ -10,8 +10,8 @@ public struct Data
 {
     public NamedData Serie { get; set; }
     public NamedData Set { get; set; }
-    public Dictionary<string, int> Purchases { get; set; }
-    public List<int> Cards { get; set; }
+    public int Purchases { get; set; }
+    public List<string> Cards { get; set; }
 }
 
 public struct NamedData
